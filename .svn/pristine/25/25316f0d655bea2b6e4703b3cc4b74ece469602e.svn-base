@@ -1,0 +1,188 @@
+//CSS 305 Assignment 2
+
+
+package model;
+
+import java.util.Map;
+import java.util.Objects;
+
+public abstract class AbstractVehicle implements Vehicle {
+    
+    private int myX;
+    private int myY;
+    private Direction myDirection;
+    private boolean myLiving;
+    private int myDeathTime;
+    private int myPokeTime;
+    private final int myInitialX;
+    private final int myInitialY;
+    private final Direction myInitialDirection;
+    private static final int myDefaultx=1;
+    private static final int myDefaulty=1;
+    private static final int myDefaultDeathTime=2;
+    private static final Direction myDefaultDirection=Direction.EAST;
+    
+    
+    protected AbstractVehicle() {
+        myLiving=true;
+        myX=myDefaultx;
+        myInitialX=myDefaultx;
+        myY=myDefaulty;
+        myInitialY=myDefaulty;
+        myInitialDirection=myDefaultDirection;
+        myDeathTime=myDefaultDeathTime;
+        myPokeTime=0;
+        myDirection=myDefaultDirection;
+       
+        
+        
+    }
+    protected AbstractVehicle(final int xDir,final int yDir,final Direction theDir) {
+              
+            if(Objects.isNull(theDir)==true) {
+                  throw new IllegalArgumentException("Must input a vaild direction type or the deathtime has to be positive value");}
+                  myPokeTime=0;
+                  myLiving=true;
+                  myX=xDir;
+                  this.myInitialX=xDir;
+                  myY=yDir;
+                  this.myInitialY=yDir;
+                  myDirection=theDir;
+                  this.myInitialDirection=theDir;
+                  
+                  
+    }
+   
+    protected AbstractVehicle(final int xDir,final int yDir,final Direction theDir,final int theDeathTime) {
+        
+        if(Objects.isNull(theDir)==true||theDeathTime<0) {
+              throw new IllegalArgumentException("Must input a vaild direction type or the deathtime has to be positive value");}
+              myPokeTime=0;
+              myDeathTime=theDeathTime;
+              myLiving=true;
+              myX=xDir;
+              this.myInitialX=xDir;
+              myY=yDir;
+              this.myInitialY=yDir;
+              myDirection=theDir;
+              this.myInitialDirection=theDir;
+              
+              
+}
+ 
+    
+    @Override
+    public void collide(final Vehicle theOther) {
+        if(this.isAlive()==true&&theOther.isAlive()==true) {
+            if(this.myDeathTime>theOther.getDeathTime()) {
+                myLiving=false;
+                poke();
+            }
+            else {
+                myLiving=true;
+            }
+            
+            
+        }
+        
+    }
+    @Override
+    public String getImageFileName() {
+        StringBuilder imageFile=new StringBuilder();
+        imageFile.append(getClass().getSimpleName().toLowerCase());
+        if(this.isAlive()) {
+            imageFile.append(".gif");
+        }
+        else {
+            imageFile.append("_dead.gif");
+        }
+        
+        return imageFile.toString();
+        
+        
+    }
+   @Override
+   public Direction getDirection() {
+    return myDirection;}
+    
+    @Override
+    public int getX(){
+        return myX;
+    }
+    @Override
+    public int getY() {
+    return myY;
+    }
+    
+   @Override
+   public boolean isAlive(){
+       return myLiving;
+      
+   }
+   @Override
+   public void poke() {
+       if(this.isAlive()==false) {
+       myPokeTime++;
+       System.out.println("MyPokeTime:"+myPokeTime);
+   }
+       if(myDeathTime==myPokeTime) {
+           myLiving=true;
+           myPokeTime=0;
+           myDirection=Direction.random();
+           System.out.println("new Direction: " +myDirection);
+          
+       }
+           
+   }
+   @Override
+   public int getDeathTime() {
+       return myDeathTime;
+   }
+   @Override
+   public void reset() {
+       setX(myInitialX);
+       setY(myInitialY);
+       setDirection(myInitialDirection);
+       myPokeTime=0;
+       myLiving=true;
+       
+       
+       
+   }
+   @Override
+   public void setDirection(final Direction theDirection) {
+           myDirection=theDirection;
+   }
+    
+    @Override
+    public void setX(final int theX) {
+        myX=theX;
+    }
+    @Override
+    public void setY(final int theY) {
+        myY=theY;
+    }
+    
+
+
+    @Override
+    public String toString() {
+        StringBuilder sb=new StringBuilder();
+        sb.append("The Vehicle located at: ");
+        sb.append(myX+" . "+myY+"\n");
+        sb.append("Is it alive? ");
+        sb.append(myLiving+"\n");
+        sb.append("The death time: ");
+        sb.append(myDeathTime+"\n");
+        sb.append("The number of poke of this car: ");
+        sb.append(myPokeTime+"\n");
+        sb.append("The facing Direction: ");
+        sb.append(myDirection);
+     
+        return sb.toString();
+        
+    }
+    
+    
+    
+}

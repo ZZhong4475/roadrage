@@ -1,0 +1,71 @@
+package model;
+
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Random;
+
+public class Atv extends AbstractVehicle{
+    private static final int myDeathTime=25;
+    private Direction myCurrentDirection;
+    public Atv(final int theX,final int theY,final Direction theDirection) {
+        super(theX,theY,theDirection,myDeathTime);
+        myCurrentDirection=theDirection;
+       
+        
+    }
+    
+
+@Override
+    public boolean canPass(final Terrain theTerrian,final Light theLight) {
+       if(theTerrian==Terrain.WALL) {
+           return false;
+       }
+       
+           return true;
+       }
+    
+
+    @Override
+    public Direction chooseDirection(Map<Direction, Terrain> theNeighbors) {
+        ArrayList<Direction> randomArray=new ArrayList<Direction>();
+        int dirNum;
+        final Direction theDirection;
+       
+               Random theRanDir=new Random();
+             if (theNeighbors.get(getDirection())!=Terrain.WALL) {
+                   randomArray.add(getDirection());
+               }
+             if(theNeighbors.get(getDirection().left())!=Terrain.WALL) {
+                 randomArray.add(getDirection().left());
+                 }
+              if (theNeighbors.get(getDirection().right())!=Terrain.WALL) {
+                 randomArray.add(getDirection().right());
+             }
+
+           
+                dirNum=theRanDir.nextInt(randomArray.size());
+                theDirection= randomArray.get(dirNum);
+                
+                
+                       
+     
+       return theDirection;
+        
+       
+   
+       
+                       
+        
+        
+    }
+    @Override
+    public String toString() {
+        return null;
+    }
+
+  
+
+    
+    
+}

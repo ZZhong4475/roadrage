@@ -1,0 +1,71 @@
+package model;
+
+
+import java.util.Map;
+
+public class Car extends AbstractVehicle{
+    private static final int myDeathTime=15;
+    private Direction myCurrentDirection;
+    
+    public Car(final int theX,final int theY,final Direction theDirection) {
+        super(theX,theY,theDirection,myDeathTime);
+        myCurrentDirection=theDirection;
+        System.out.println("CurrentDirection: "+myCurrentDirection);
+    }
+
+    @Override
+    public boolean canPass(Terrain theTerrain, Light theLight) {
+         boolean thePass=true;
+        if(theTerrain==Terrain.STREET||theTerrain==Terrain.LIGHT||theTerrain==Terrain.CROSSWALK) {
+            thePass=true;
+        }
+        if(theTerrain==Terrain.CROSSWALK&&theLight!=Light.GREEN) {
+            thePass=false;
+        }
+        else if(theTerrain==Terrain.LIGHT&&theLight==Light.RED)
+        {
+            thePass=false;
+        }
+       
+        
+        
+        return thePass;
+    }
+
+    @Override
+    public Direction chooseDirection(Map<Direction, Terrain> theNeighbors) {
+        Direction theDirection;
+        if((theNeighbors.get(getDirection())==Terrain.CROSSWALK
+                        ||theNeighbors.get(getDirection())==Terrain.STREET
+                        ||theNeighbors.get(getDirection())==Terrain.LIGHT
+                       )) {
+                        theDirection=getDirection();
+
+
+            }
+        else if(theNeighbors.get(getDirection().left())==Terrain.CROSSWALK
+                        ||theNeighbors.get(getDirection().left())==Terrain.STREET
+                        ||theNeighbors.get(getDirection().left())==Terrain.LIGHT
+                        ){
+                        theDirection=getDirection().left();
+                   
+        }
+        else if(theNeighbors.get(getDirection().right())==Terrain.CROSSWALK
+                        ||theNeighbors.get(getDirection().right())==Terrain.STREET
+                        ||theNeighbors.get(getDirection().right())==Terrain.LIGHT
+                        ){
+                        theDirection=getDirection().right();
+                       
+        }
+        else {
+                    theDirection=getDirection().reverse();
+                    
+        }
+        return theDirection;
+    }
+    @Override
+    public String toString() {
+        return null;
+    }
+
+}

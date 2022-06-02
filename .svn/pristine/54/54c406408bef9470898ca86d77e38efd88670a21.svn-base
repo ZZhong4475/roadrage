@@ -1,0 +1,91 @@
+package model;
+
+
+import java.util.Map;
+
+public class Taxi extends AbstractVehicle{
+    private static final int myDeathTime=15;
+    private int myClock=0;
+    
+    public Taxi(final int theX,final int theY,final Direction theDirection) {
+        super(theX,theY,theDirection,myDeathTime);
+     
+    }
+
+    @Override
+    public boolean canPass(Terrain theTerrain, Light theLight) {
+         boolean thePass=true;
+        if(theTerrain==Terrain.STREET||theTerrain==Terrain.LIGHT||theTerrain==Terrain.CROSSWALK) {
+            thePass=true;
+          
+          
+        }
+        if(theTerrain==Terrain.LIGHT&&theLight==Light.RED) {
+            thePass=false;
+        }
+        else if(theTerrain==Terrain.CROSSWALK&&theLight==Light.RED) {
+            thePass=false;
+            myClock++;
+            if(myClock==3) {
+                myClock=0;
+                thePass=true;
+            }
+        }
+        
+       
+        
+        
+        
+        return thePass;
+        
+    
+    }
+    @Override
+    public Direction chooseDirection(Map<Direction, Terrain> theNeighbors) {
+                    Direction theDirection;
+        if((theNeighbors.get(getDirection())==Terrain.CROSSWALK
+                        ||theNeighbors.get(getDirection())==Terrain.STREET
+                        ||theNeighbors.get(getDirection())==Terrain.LIGHT
+                       )) {
+            theDirection=getDirection();
+
+
+            }
+        else if(theNeighbors.get(getDirection().left())==Terrain.CROSSWALK
+                        ||theNeighbors.get(getDirection().left())==Terrain.STREET
+                        ||theNeighbors.get(getDirection().left())==Terrain.LIGHT
+                        ){
+                        theDirection=getDirection().left();
+                        
+        }
+        else if(theNeighbors.get(getDirection().right())==Terrain.CROSSWALK
+                        ||theNeighbors.get(getDirection().right())==Terrain.STREET
+                        ||theNeighbors.get(getDirection().right())==Terrain.LIGHT
+                        ){
+                        theDirection=getDirection().right();
+                        
+        }
+        else {
+                    theDirection=getDirection().reverse();
+                    
+        }
+        return theDirection;
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb=new StringBuilder();
+        sb.append("The Taxi located at: ");
+        sb.append(this.getX()+" . "+this.getY()+"\n");
+        sb.append("Is it alive? ");
+        sb.append(this.isAlive()+"\n");
+        sb.append("The death time: ");
+        sb.append(myDeathTime+"\n");
+        sb.append("The facing Direction: ");
+        sb.append(this.getDirection());
+        sb.append("My Clock time is: ");
+        sb.append(this.myClock);
+     
+        return sb.toString();
+    }
+
+}
